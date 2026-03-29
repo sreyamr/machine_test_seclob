@@ -9,6 +9,8 @@ import 'features/auth/data/respositories/auth_repository_imp.dart';
 import 'features/auth/domain/usecases/send_otp_usecase.dart';
 import 'features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'features/auth/presentation/provider/auth_provider.dart';
+import 'features/challenges/data/data_sources/challenge_local_data_source.dart';
+import 'features/challenges/presentation/provider/challenge_provider.dart';
 import 'features/home/presentation/provider/naviagtion_provider.dart';
 import 'features/profile/data/data_sources/profile_local_data_source.dart';
 import 'features/profile/presentation/provider/profile_provider.dart';
@@ -23,11 +25,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final apiClient = ApiClient();
-
     final remoteDataSource = AuthRemoteDataSource(apiClient);
-
     final repository = AuthRepositoryImpl(remoteDataSource);
     final settingsDataSource = SettingsLocalDataSource();
     final sendOtpUseCase = SendOtpUseCase(repository);
@@ -47,6 +46,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ProfileProvider(ProfileLocalDataSource()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ChallengeProvider(ChallengeLocalDataSource()),
         ),
       ],
       child: const MaterialApp(

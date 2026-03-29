@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:machine_test/core/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/app_color.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -105,29 +106,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
-
             const SizedBox(height: 30),
+            AppButton(text: "Save Changes", onTap: (){})
 
-
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                gradient: const LinearGradient(
-                  colors: [
-                    AppColors.primary,
-                    AppColors.secondary
-                  ],
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  "Save Changes",
-                  style: AppTextStyles.button,
-                ),
-              ),
-            ),
           ],
         ),
       ),

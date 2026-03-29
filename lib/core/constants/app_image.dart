@@ -9,10 +9,15 @@ class AppImage {
   static const String notification = "assets/icons/notification.png";
   static const String bank = "assets/icons/bank.png";
   static const String subscription = "assets/icons/subscription.png";
-  static const String privacy = "assets/icons/privacy.png";
+  static const String privacy = "assets/icons/warning.png";
   static const String terms = "assets/icons/danger.png";
   static const String faq = "assets/icons/faq.png";
   static const String logout = "assets/icons/logout.png";
   static const String delete = "assets/icons/trash.png";
   static const String img = "assets/img.png";
+  static const String img1 = "assets/images/img1.png";
+  static const String img2 = "assets/images/img2.png";
+  static const String img3= "assets/images/img3.png";
+
+
 }

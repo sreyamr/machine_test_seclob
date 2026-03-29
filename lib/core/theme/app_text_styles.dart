@@ -9,8 +9,13 @@ class AppTextStyles {
     color: AppColors.white,
   );
   static TextStyle medium = GoogleFonts.workSans(
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: FontWeight.w800,
+    color: AppColors.white,
+  );
+  static TextStyle semiBold = GoogleFonts.workSans(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
     color: AppColors.white,
   );
   static TextStyle subtitle = GoogleFonts.workSans(

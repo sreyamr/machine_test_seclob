@@ -7,6 +7,7 @@ import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
+import '../../../../core/widgets/custom_button.dart';
 import '../provider/auth_provider.dart';
 
 class PhoneNumberScreen extends StatelessWidget {
@@ -38,10 +39,10 @@ class PhoneNumberScreen extends StatelessWidget {
 
             const Spacer(),
 
-            _buildNextButton(
-              context: context,
-              provider: provider,
-              onPressed: () async {
+            AppButton(
+              text: "Next",
+              isLoading: provider.isLoading,
+              onTap: () async {
                 if (!_isValidPhone(phone)) {
                   AppSnackbar.show(
                     context: context,

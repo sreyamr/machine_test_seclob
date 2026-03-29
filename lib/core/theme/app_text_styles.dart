@@ -8,7 +8,11 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
     color: AppColors.white,
   );
-
+  static TextStyle medium = GoogleFonts.workSans(
+    fontSize: 22,
+    fontWeight: FontWeight.w800,
+    color: AppColors.white,
+  );
   static TextStyle subtitle = GoogleFonts.workSans(
     fontSize: 16,
     color: AppColors.greyText,
@@ -18,5 +22,16 @@ class AppTextStyles {
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: AppColors.white,
+  );
+
+  static const TextStyle smallGrey = TextStyle(
+    color: Colors.grey,
+    fontSize: 12,
+  );
+
+  static const TextStyle link = TextStyle(
+    color: Colors.white,
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
   );
 }

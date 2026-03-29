@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:machine_test/core/constants/app_image.dart';
+import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_color.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../widgets/onboarding_page.dart';
@@ -12,24 +13,24 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController controller = PageController();
-  int currentIndex = 0;
+  final PageController _controller = PageController();
+  int _currentIndex = 0;
 
-  final pages = [
-    const OnboardingPage(
+  final List<Widget> _pages = const [
+    OnboardingPage(
       image: AppImage.onboarding1,
       title: "Track Your Daily Steps!",
       subtitle:
       "Let your phone automatically detect your steps and keep you updated in real time.",
     ),
-    const OnboardingPage(
+    OnboardingPage(
       image: AppImage.onboarding2,
       title: "Earn Rewards for Every Move!",
       subtitle:
       "Walk more, unlock scratch cards, and collect exciting daily rewards.",
     ),
-    const OnboardingPage(
-      image: AppImage.onboarding2,
+    OnboardingPage(
+      image: AppImage.onboarding3,
       title: "Boost Your Progress & Stay Motivated!",
       subtitle:
       "Join challenges, view insights, and level up your fitness journey effortlessly.",
@@ -42,14 +43,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
+
           PageView.builder(
-            controller: controller,
-            itemCount: pages.length,
-            onPageChanged: (index) {
-              setState(() => currentIndex = index);
-            },
-            itemBuilder: (_, index) => pages[index],
+            controller: _controller,
+            itemCount: _pages.length,
+            onPageChanged: (index) => setState(() => _currentIndex = index),
+            itemBuilder: (_, index) => _pages[index],
           ),
+
 
           Positioned(
             bottom: 40,
@@ -57,50 +58,91 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             right: 20,
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    pages.length,
-                        (index) => Container(
-                      margin: const EdgeInsets.all(4),
-                      width: currentIndex == index ? 12 : 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: currentIndex == index
-                            ? AppColors.white
-                            : AppColors.greyText,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-
+                _buildArrowControls(),
                 const SizedBox(height: 20),
-
-                GestureDetector(
-                  onTap: () {
-                    if (currentIndex < pages.length - 1) {
-                      controller.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease,
-                      );
-                    }
-                  },
-                  child: Container(
-                    height: 55,
-                    decoration: BoxDecoration(
-                      gradient: AppColors.gradient,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child:  Center(
-                      child: Text("Get Started",style:AppTextStyles.button),
-                    ),
-                  ),
-                )
+                _buildActionButton(context),
               ],
             ),
-          )
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildArrowControls() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _arrowButton(
+          icon: Icons.arrow_back,
+          enabled: _currentIndex > 0,
+          onTap: () => _controller.previousPage(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.ease,
+          ),
+        ),
+        _arrowButton(
+          icon: Icons.arrow_forward,
+          enabled: _currentIndex < _pages.length - 1,
+          onTap: () => _controller.nextPage(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.ease,
+          ),
+        ),
+      ],
+    );
+  }
+
+
+  Widget _arrowButton({
+    required IconData icon,
+    required bool enabled,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: enabled ? onTap : null,
+      child: Container(
+        height: 50,
+        width: 140,
+        decoration: BoxDecoration(
+          color: AppColors.grey900.withOpacity(0.6),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(
+          icon,
+          color: enabled ? Colors.white : Colors.grey,
+        ),
+      ),
+    );
+  }
+
+
+  Widget _buildActionButton(BuildContext context) {
+    final isLast = _currentIndex == _pages.length - 1;
+
+    return GestureDetector(
+      onTap: () {
+        if (isLast) {
+          Navigator.pushNamed(context, AppRoutes.welcome);
+        } else {
+          _controller.nextPage(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.ease,
+          );
+        }
+      },
+      child: Container(
+        height: 55,
+        decoration: BoxDecoration(
+          gradient: AppColors.gradient,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Center(
+          child: Text(
+            isLast ? "Get Started" : "Continue",
+            style: AppTextStyles.button,
+          ),
+        ),
       ),
     );
   }

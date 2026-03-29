@@ -93,8 +93,23 @@ class WelcomeScreen extends StatelessWidget {
         height: 55,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: AppColors.grey900,
+          gradient: const LinearGradient(
+            colors: [
+             AppColors.darkPurple,
+              AppColors.deepBlack
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white.withOpacity(0.05)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

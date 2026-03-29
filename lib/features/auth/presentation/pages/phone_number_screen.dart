@@ -1,44 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:machine_test/core/theme/app_color.dart';
-import 'package:machine_test/core/widgets/loading_widget.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../provider/auth_provider.dart';
+import 'package:country_picker/country_picker.dart';
 
-class PhoneNumberScreen extends StatelessWidget {
+
+class PhoneNumberScreen extends StatefulWidget {
   const PhoneNumberScreen({super.key});
+
+  @override
+  State<PhoneNumberScreen> createState() => _PhoneNumberScreenState();
+}
+
+class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
+  String phone = "";
+  Country selectedCountry = Country(
+    phoneCode: "91",
+    countryCode: "IN",
+    e164Sc: 0,
+    geographic: true,
+    level: 1,
+    name: "India",
+    example: "9123456789",
+    displayName: "India",
+    displayNameNoCountryCode: "India",
+    e164Key: "",
+  );
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<AuthProvider>();
 
-    String phone = "";
-
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const CustomAppBar(
-      ),
+      appBar: const CustomAppBar(),
       body: Padding(
-        padding: const EdgeInsets.only(left: 20,right: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             _buildTitle(),
-
             const SizedBox(height: 20),
-
             _buildPhoneInput(onChanged: (value) {
               phone = value;
             }),
-
             const Spacer(),
-
             AppButton(
               text: "Next",
               isLoading: provider.isLoading,
@@ -51,32 +62,30 @@ class PhoneNumberScreen extends StatelessWidget {
                   return;
                 }
 
-                await context.read<AuthProvider>().sendOtp(phone);
+                // Prepend country code when sending OTP
+                String fullPhone = "+${selectedCountry.phoneCode}$phone";
+                await context.read<AuthProvider>().sendOtp(fullPhone);
 
                 Navigator.pushNamed(
                   context,
                   AppRoutes.otp,
-                  arguments: phone,
+                  arguments: fullPhone,
                 );
               },
             ),
-
             const SizedBox(height: 12),
-
             _buildTermsText(),
-
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
           ],
         ),
       ),
     );
   }
 
-
   Widget _buildTitle() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children:  [
+      children: [
         Text(
           "Add your contact number",
           style: AppTextStyles.medium,
@@ -90,25 +99,49 @@ class PhoneNumberScreen extends StatelessWidget {
     );
   }
 
-
   Widget _buildPhoneInput({required Function(String) onChanged}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-       color: AppColors.grey900,
+        gradient: const LinearGradient(
+          colors: [AppColors.darkPurple, AppColors.deepBlack],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          const Text("+91",
-              style: TextStyle(color: Colors.white, fontSize: 16)),
-
+          // Country flag and code picker
+          GestureDetector(
+            onTap: () {
+              showCountryPicker(
+                context: context,
+                showPhoneCode: true,
+                onSelect: (Country country) {
+                  setState(() {
+                    selectedCountry = country;
+                  });
+                },
+              );
+            },
+            child: Row(
+              children: [
+                Text(
+                  "${selectedCountry.flagEmoji} +${selectedCountry.phoneCode}",
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                const Icon(Icons.arrow_drop_down, color: Colors.white),
+              ],
+            ),
+          ),
           const SizedBox(width: 10),
 
+          // Divider
           Container(width: 1, height: 20, color: Colors.grey),
-
           const SizedBox(width: 10),
 
+          // Phone number input
           Expanded(
             child: TextFormField(
               onChanged: onChanged,
@@ -124,42 +157,6 @@ class PhoneNumberScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-
-  Widget _buildNextButton({
-    required BuildContext context,
-    required AuthProvider provider,
-    required VoidCallback onPressed,
-  }) {
-    return GestureDetector(
-      onTap: provider.isLoading ? null : onPressed,
-      child: Container(
-        height: 50,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Colors.purple, Colors.blue],
-          ),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Center(
-          child: provider.isLoading
-              ? const SizedBox(
-            height: 20,
-            width: 20,
-            child: AppLoader()
-          )
-              : const Text(
-            "Next",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -185,6 +182,7 @@ class PhoneNumberScreen extends StatelessWidget {
       textAlign: TextAlign.center,
     );
   }
+
   bool _isValidPhone(String phone) {
     return phone.length == 10 && RegExp(r'^[0-9]+$').hasMatch(phone);
   }

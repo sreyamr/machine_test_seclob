@@ -44,24 +44,6 @@ class ActiveChallengeCard extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
 
-                Positioned(
-                  bottom: 10,
-                  left: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      "09:30",
-                      style: AppTextStyles.medium.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -82,7 +64,7 @@ class ActiveChallengeCard extends StatelessWidget {
                           height: 26,
                           width: 26,
                           decoration: BoxDecoration(
-                            color: AppColors.primary,
+                            color: AppColors.darkPurple,
                             borderRadius: BorderRadius.circular(6),
                           ),
                         ),

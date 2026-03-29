@@ -105,12 +105,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         height: 50,
         width: 140,
         decoration: BoxDecoration(
-          color: AppColors.grey900.withOpacity(0.6),
+          gradient:  LinearGradient(
+            colors: [
+              enabled ? AppColors.darkPurple : Colors.transparent,
+              enabled ?  AppColors.deepBlack : Colors.transparent,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(
           icon,
-          color: enabled ? Colors.white : Colors.grey,
+          color: enabled ? AppColors.white : AppColors.greyLowLight,
         ),
       ),
     );
@@ -139,8 +146,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         child: Center(
           child: Text(
-            isLast ? "Get Started" : "Continue",
-            style: AppTextStyles.button,
+             "Get Started" ,
+            style: AppTextStyles.semiBold,
           ),
         ),
       ),

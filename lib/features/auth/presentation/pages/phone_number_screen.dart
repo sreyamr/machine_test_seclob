@@ -18,8 +18,10 @@ class PhoneNumberScreen extends StatefulWidget {
 }
 
 class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
-  String phone = "";
-  Country selectedCountry = Country(
+  static const int _phoneLength = 10;
+
+  String _phone = "";
+  Country _selectedCountry = Country(
     phoneCode: "91",
     countryCode: "IN",
     e164Sc: 0,
@@ -46,32 +48,12 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
           children: [
             _buildTitle(),
             const SizedBox(height: 20),
-            _buildPhoneInput(onChanged: (value) {
-              phone = value;
-            }),
+            _buildPhoneInput(onChanged: (value) => _phone = value),
             const Spacer(),
             AppButton(
               text: "Next",
               isLoading: provider.isLoading,
-              onTap: () async {
-                if (!_isValidPhone(phone)) {
-                  AppSnackbar.show(
-                    context: context,
-                    message: "Enter valid phone number",
-                  );
-                  return;
-                }
-
-                // Prepend country code when sending OTP
-                String fullPhone = "+${selectedCountry.phoneCode}$phone";
-                await context.read<AuthProvider>().sendOtp(fullPhone);
-
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.otp,
-                  arguments: fullPhone,
-                );
-              },
+              onTap: () => _onNextTap(context, provider),
             ),
             const SizedBox(height: 12),
             _buildTermsText(),
@@ -86,15 +68,9 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Add your contact number",
-          style: AppTextStyles.medium,
-        ),
+        Text("Add your contact number", style: AppTextStyles.medium),
         const SizedBox(height: 6),
-        Text(
-          "A verification code will be sent to this number.",
-          style: AppTextStyles.subtitle,
-        ),
+        Text("A verification code will be sent to this number.", style: AppTextStyles.subtitle),
       ],
     );
   }
@@ -112,42 +88,16 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
       ),
       child: Row(
         children: [
-          // Country flag and code picker
-          GestureDetector(
-            onTap: () {
-              showCountryPicker(
-                context: context,
-                showPhoneCode: true,
-                onSelect: (Country country) {
-                  setState(() {
-                    selectedCountry = country;
-                  });
-                },
-              );
-            },
-            child: Row(
-              children: [
-                Text(
-                  "${selectedCountry.flagEmoji} +${selectedCountry.phoneCode}",
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
-                ),
-                const Icon(Icons.arrow_drop_down, color: Colors.white),
-              ],
-            ),
-          ),
+          _buildCountryPicker(),
           const SizedBox(width: 10),
-
-          // Divider
           Container(width: 1, height: 20, color: Colors.grey),
           const SizedBox(width: 10),
-
-          // Phone number input
           Expanded(
             child: TextFormField(
               onChanged: onChanged,
               style: const TextStyle(color: Colors.white),
               keyboardType: TextInputType.phone,
-              maxLength: 10,
+              maxLength: _phoneLength,
               decoration: const InputDecoration(
                 counterText: "",
                 border: InputBorder.none,
@@ -161,21 +111,38 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
     );
   }
 
+  Widget _buildCountryPicker() {
+    return GestureDetector(
+      onTap: () {
+        showCountryPicker(
+          context: context,
+          showPhoneCode: true,
+          onSelect: (Country country) {
+            setState(() => _selectedCountry = country);
+          },
+        );
+      },
+      child: Row(
+        children: [
+          Text(
+            "${_selectedCountry.flagEmoji} +${_selectedCountry.phoneCode}",
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          const Icon(Icons.arrow_drop_down, color: Colors.white),
+        ],
+      ),
+    );
+  }
+
   Widget _buildTermsText() {
     return const Text.rich(
       TextSpan(
         text: "By proceeding, you agree to our ",
         style: AppTextStyles.smallGrey,
         children: [
-          TextSpan(
-            text: "Terms & Conditions",
-            style: AppTextStyles.link,
-          ),
+          TextSpan(text: "Terms & Conditions", style: AppTextStyles.link),
           TextSpan(text: " and "),
-          TextSpan(
-            text: "Privacy Policy",
-            style: AppTextStyles.link,
-          ),
+          TextSpan(text: "Privacy Policy", style: AppTextStyles.link),
           TextSpan(text: "."),
         ],
       ),
@@ -184,6 +151,25 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   }
 
   bool _isValidPhone(String phone) {
-    return phone.length == 10 && RegExp(r'^[0-9]+$').hasMatch(phone);
+    return phone.length == _phoneLength && RegExp(r'^[0-9]+$').hasMatch(phone);
+  }
+
+  Future<void> _onNextTap(BuildContext context, AuthProvider provider) async {
+    if (!_isValidPhone(_phone)) {
+      AppSnackbar.show(context: context, message: "Enter valid phone number");
+      return;
+    }
+
+    final fullPhone = "+${_selectedCountry.phoneCode}$_phone";
+    final response = await provider.sendOtp(fullPhone);
+
+    if (response != null && response["success"] == true) {
+      Navigator.pushNamed(context, AppRoutes.otp, arguments: fullPhone);
+    } else {
+      AppSnackbar.show(
+        context: context,
+        message: response?["message"] ?? provider.errorMessage ?? "Something went wrong",
+      );
+    }
   }
 }

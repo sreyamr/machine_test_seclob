@@ -1,4 +1,4 @@
 abstract class AuthRepository {
-  Future<void> sendOtp(String countryCode, String phone);
-  Future<void> verifyOtp(String countryCode, String phone, String otp);
+  Future<Map<String, dynamic>> sendOtp(String countryCode, String phone);
+  Future<Map<String, dynamic>> verifyOtp(String countryCode, String phone, String otp);
 }

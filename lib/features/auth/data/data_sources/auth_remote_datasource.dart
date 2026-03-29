@@ -6,24 +6,26 @@ class AuthRemoteDataSource {
 
   AuthRemoteDataSource(this.apiClient);
 
-  Future<void> sendOtp(String countryCode, String phone) async {
-    await apiClient.post(
+  Future<Map<String, dynamic>> sendOtp(String countryCode, String phone) async {
+    final response = await apiClient.post(
       ApiEndpoints.sendOtp,
       data: {
-        "countryCode": countryCode.toString(),
-        "whatsappNumber": phone.toString(),
+        "whatsappNumber": phone,
       },
     );
+
+    return response.data;
   }
 
-  Future<void> verifyOtp(
+  Future<Map<String, dynamic>> verifyOtp(
       String countryCode, String phone, String otp) async {
-    await apiClient.post(
+    final response = await apiClient.post(
       ApiEndpoints.verifyOtp,
       data: {
-        "whatsappNumber": "$countryCode$phone",
+        "whatsappNumber": phone,
         "otp": otp,
       },
     );
+    return response.data;
   }
 }

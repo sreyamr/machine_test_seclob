@@ -5,7 +5,7 @@ class SendOtpUseCase {
 
   SendOtpUseCase(this.repository);
 
-  Future<void> call(String countryCode, String phone) async {
-    await repository.sendOtp(countryCode, phone);
+  Future<Map<String, dynamic>> call(String countryCode, String phone) async {
+    return await repository.sendOtp(countryCode, phone);
   }
 }

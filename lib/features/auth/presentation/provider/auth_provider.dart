@@ -16,7 +16,7 @@ class AuthProvider extends ChangeNotifier {
   String? errorMessage;
 
 
-  Future<bool> sendOtp(String phoneNumber) async {
+  Future<Map<String, dynamic>?> sendOtp(String phoneNumber) async {
     isLoading = true;
     errorMessage = null;
     notifyListeners();
@@ -24,41 +24,37 @@ class AuthProvider extends ChangeNotifier {
     try {
       phone = phoneNumber;
 
-      await sendOtpUseCase(countryCode, phoneNumber);
-
-      return true;
+      final response = await sendOtpUseCase(countryCode, phoneNumber);
+      return response;
     } catch (e) {
       if (e is DioException) {
-
-        errorMessage =
-            e.response?.data["error"] ?? "Something went wrong";
+        errorMessage = e.response?.data["error"] ?? "Something went wrong";
       } else {
         errorMessage = "Unexpected error";
       }
-      return false;
+      return {"success": false, "error": errorMessage};
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<bool> verifyOtp(String otp) async {
+  Future<Map<String, dynamic>?> verifyOtp(String otp) async {
     isLoading = true;
     errorMessage = null;
     notifyListeners();
 
     try {
-      await verifyOtpUseCase(countryCode, phone, otp);
-
-      return true;
+      final response = await verifyOtpUseCase(countryCode, phone, otp);
+      return response;
     } catch (e) {
       if (e is DioException) {
-        errorMessage =
-            e.response?.data["error"] ?? "Invalid OTP";
+        errorMessage = e.response?.data["error"] ?? "Invalid OTP";
+        return {"success": false, "error": errorMessage};
       } else {
         errorMessage = "Unexpected error";
+        return {"success": false, "error": errorMessage};
       }
-      return false;
     } finally {
       isLoading = false;
       notifyListeners();

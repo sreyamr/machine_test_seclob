@@ -9,13 +9,13 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<void> sendOtp(String countryCode, String phone) async {
-    await remoteDataSource.sendOtp(countryCode, phone);
+  Future<Map<String, dynamic>> sendOtp(String countryCode, String phone) async {
+    return await remoteDataSource.sendOtp(countryCode, phone);
   }
 
   @override
-  Future<void> verifyOtp(
+  Future<Map<String, dynamic>> verifyOtp(
       String countryCode, String phone, String otp) async {
-    await remoteDataSource.verifyOtp(countryCode, phone, otp);
+    return await remoteDataSource.verifyOtp(countryCode, phone, otp);
   }
 }

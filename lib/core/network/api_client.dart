@@ -18,15 +18,12 @@ class ApiClient {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          print("➡️ REQUEST:");
           print("URL: ${options.baseUrl}${options.path}");
-          print("METHOD: ${options.method}");
           print("DATA: ${options.data}");
           return handler.next(options);
         },
 
         onResponse: (response, handler) {
-          print("✅ RESPONSE:");
           print("URL: ${response.requestOptions.uri}");
           print("STATUS: ${response.statusCode}");
           print("DATA: ${response.data}");
@@ -34,7 +31,6 @@ class ApiClient {
         },
 
         onError: (DioException e, handler) {
-          print("❌ ERROR:");
           print("URL: ${e.requestOptions.uri}");
           print("MESSAGE: ${e.message}");
           print("DATA: ${e.response?.data}");

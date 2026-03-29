@@ -14,7 +14,7 @@ class AppTextStyles {
     color: AppColors.white,
   );
   static TextStyle subtitle = GoogleFonts.workSans(
-    fontSize: 16,
+    fontSize: 15,
     color: AppColors.greyText,
   );
 

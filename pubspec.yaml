@@ -39,6 +39,7 @@ dependencies:
   go_router: ^15.1.2
   dio: ^5.9.2
   provider: ^6.1.5+1
+  flutter_svg: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +60,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
+    - assets/icons/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

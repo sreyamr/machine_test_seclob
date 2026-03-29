@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../settings/presentation/pages/settings_screen.dart';
 import '../provider/naviagtion_provider.dart';
 import '../widgets/custom_bottom_nav.dart';
 
@@ -14,7 +15,7 @@ class MainScreen extends StatelessWidget {
       const Center(child: Text("Home", style: TextStyle(color: Colors.white))),
       const Center(child: Text("Challenges", style: TextStyle(color: Colors.white))),
       const Center(child: Text("Rewards", style: TextStyle(color: Colors.white))),
-      const Center(child: Text("Settings", style: TextStyle(color: Colors.white))),
+      const SettingsScreen()
     ];
 
     return Scaffold(

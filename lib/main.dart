@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:machine_test/features/settings/presentation/provider/settings_provider.dart';
 import 'package:provider/provider.dart';
 import 'core/network/api_client.dart';
 import 'core/routes/app_router.dart';
@@ -9,6 +10,7 @@ import 'features/auth/domain/usecases/send_otp_usecase.dart';
 import 'features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'features/auth/presentation/provider/auth_provider.dart';
 import 'features/home/presentation/provider/naviagtion_provider.dart';
+import 'features/settings/data/datasources/settings_locall_data_source.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
     final remoteDataSource = AuthRemoteDataSource(apiClient);
 
     final repository = AuthRepositoryImpl(remoteDataSource);
-
+    final settingsDataSource = SettingsLocalDataSource();
     final sendOtpUseCase = SendOtpUseCase(repository);
     final verifyOtpUseCase = VerifyOtpUseCase(repository);
 
@@ -38,6 +40,9 @@ class MyApp extends StatelessWidget {
           ),
         ),
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
+        ChangeNotifierProvider(
+          create: (_) => SettingsProvider(settingsDataSource),
+        ),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,

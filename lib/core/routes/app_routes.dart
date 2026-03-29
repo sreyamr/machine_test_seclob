@@ -5,5 +5,6 @@ class AppRoutes {
   static const otp = "/otp";
   static const welcome = "/welcome";
   static const home = "/home";
+  static const profile = "/profile";
 
 }

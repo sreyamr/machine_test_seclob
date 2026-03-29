@@ -14,4 +14,5 @@ class AppImage {
   static const String faq = "assets/icons/faq.png";
   static const String logout = "assets/icons/logout.png";
   static const String delete = "assets/icons/trash.png";
+  static const String img = "assets/img.png";
 }

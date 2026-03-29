@@ -10,6 +10,8 @@ import 'features/auth/domain/usecases/send_otp_usecase.dart';
 import 'features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'features/auth/presentation/provider/auth_provider.dart';
 import 'features/home/presentation/provider/naviagtion_provider.dart';
+import 'features/profile/data/data_sources/profile_local_data_source.dart';
+import 'features/profile/presentation/provider/profile_provider.dart';
 import 'features/settings/data/datasources/settings_locall_data_source.dart';
 
 void main() {
@@ -42,6 +44,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider(
           create: (_) => SettingsProvider(settingsDataSource),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ProfileProvider(ProfileLocalDataSource()),
         ),
       ],
       child: const MaterialApp(

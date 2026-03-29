@@ -39,7 +39,6 @@ class OtpScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            const SizedBox(height: 80),
 
              Text(
               "Enter verification code",

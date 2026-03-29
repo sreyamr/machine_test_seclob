@@ -6,6 +6,7 @@ import '../../features/auth/presentation/pages/phone_number_screen.dart';
 import '../../features/home/presentation/pages/main_screen.dart';
 import '../../features/onboarding/presentation/pages/onboarding_screen.dart';
 import '../../features/onboarding/presentation/pages/splash_screen.dart';
+import '../../features/profile/presentation/pages/profile_screen.dart';
 import 'app_routes.dart';
 
 class AppRouter {
@@ -34,10 +35,13 @@ class AppRouter {
           builder: (_) => const MainScreen(),
         );
       case AppRoutes.otp:
-
         final phone = settings.arguments as String? ?? "";
         return MaterialPageRoute(
           builder: (_) => OtpScreen(phone: phone),
+        );
+      case AppRoutes.profile:
+        return MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
         );
       default:
         return MaterialPageRoute(

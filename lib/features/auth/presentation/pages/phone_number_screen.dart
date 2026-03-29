@@ -27,7 +27,6 @@ class PhoneNumberScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 80),
 
             _buildTitle(),
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:machine_test/core/widgets/custom_app_bar.dart';
 import 'package:machine_test/features/settings/presentation/provider/settings_provider.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_color.dart';
 import '../widgets/settings_tile.dart';
 
@@ -14,9 +15,13 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
+  @override
   void initState() {
     super.initState();
-    context.read<SettingsProvider>().loadSettings();
+
+    Future.microtask(() {
+      context.read<SettingsProvider>().loadSettings();
+    });
   }
 
   @override
@@ -25,18 +30,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-appBar: const CustomAppBar(title: "Settings",),
+      appBar: const CustomAppBar(
+        title: "Settings",
+      ),
       body: ListView.builder(
         itemCount: controller.items.length,
         itemBuilder: (context, index) {
           final item = controller.items[index];
 
           return SettingsTile(
-            title: item.title,
-            isDanger: item.isDanger,
-            onTap: () {
-            }, icon: item.icon
-          );
+              title: item.title,
+              isDanger: item.isDanger,
+              onTap: () {
+                if (item.title == "Profile") {
+                  Navigator.pushNamed(context, AppRoutes.profile);
+                }
+              },
+              icon: item.icon);
         },
       ),
     );
